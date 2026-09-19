@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Kuis IPS Kelas IX - Fixed Pembahasan</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f1c40f;
+            --bg: #eef2f5;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        header p {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+        }
+
+        .mode-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .mode-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mode-card:hover {
+            border-color: var(--secondary);
+            background: #e8f4fc;
+            transform: translateY(-2px);
+        }
+
+        .mode-info h3 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .mode-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .badge-short { background: var(--secondary); }
+        .badge-exam { background: var(--warning); color: #333; }
+        .badge-rank { background: var(--danger); }
+
+        .quiz-screen { display: none; }
+
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            height: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .question-box {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 12px 18px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background-color: #e8f4fc;
+            border-color: var(--secondary);
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda !important;
+            border-color: var(--success) !important;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da !important;
+            border-color: var(--danger) !important;
+            color: #721c24;
+        }
+
+        .explanation-box {
+            background-color: #eef7fe;
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background-color: var(--secondary);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover { background-color: #2980b9; }
+        .btn:disabled { background-color: #bdc3c7; cursor: not-allowed; }
+        .btn-outline { background: transparent; border: 2px solid var(--secondary); color: var(--secondary); }
+        .btn-outline:hover { background: var(--secondary); color: white; }
+
+        .result-screen { text-align: center; display: none; }
+        .score-display { font-size: 3rem; font-weight: bold; color: var(--secondary); margin: 15px 0; }
+        
+        .review-container {
+            max-height: 400px;
+            overflow-y: auto;
+            text-align: left;
+            margin-top: 20px;
+            padding-right: 5px;
+        }
+
+        .review-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--secondary);
+            font-size: 0.9rem;
+        }
+        .review-item.correct-item { border-left-color: var(--success); }
+        .review-item.incorrect-item { border-left-color: var(--danger); }
+
+        @media (max-width: 600px) {
+            .mode-card { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Kuis Interaktif IPS Kelas IX</h1>
+        <p>Materi ASTS 2026: Perubahan Sosial, Modernisasi, Globalisasi, & Kearifan Lokal</p>
+    </header>
+
+    <div id="mode-screen">
+        <h2 style="margin-bottom: 15px; font-size: 1.2rem; color: var(--primary);">Pilih Mode Kuis:</h2>
+        <div class="mode-selection">
+            <div class="mode-card" onclick="selectMode('short')">
+                <div class="mode-info">
+                    <h3>1. Kuis Singkat</h3>
+                    <p>10 Soal acak dari total 60 soal — Cocok untuk review cepat.</p>
+                </div>
+                <span class="badge badge-short">10 Soal</span>
+            </div>
+
+            <div class="mode-card" onclick="selectMode('exam')">
+                <div class="mode-info">
+                    <h3>2. Latihan Ujian</h3>
+                    <p>40 Soal acak — Simulasi lengkap sesuai kisi-kisi ASTS.</p>
+                </div>
+                <span class="badge badge-exam">40 Soal</span>
+            </div>
+
+            <div class="mode-card" onclick="selectMode('rank')">
+                <div class="mode-info">
+                    <h3>3. Push Rank</h3>
+                    <p>60 Soal Maraton — Uji seluruh bank soal dengan posisi diacak.</p>
+                </div>
+                <span class="badge badge-rank">60 Soal</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="quiz-screen">
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <div class="quiz-header">
+            <span id="question-number">Soal 1</span>
+            <span id="score-count">Skor: 0</span>
+        </div>
+
+        <div class="question-box" id="question-text"></div>
+        <div class="options-container" id="options-container"></div>
+
+        <div class="explanation-box" id="explanation-box">
+            <h4 style="color: var(--secondary); margin-bottom: 3px;">Pembahasan:</h4>
+            <p id="explanation-text"></p>
+        </div>
+
+        <div class="footer-nav">
+            <button class="btn btn-outline" onclick="exitToMenu()">Menu Utama</button>
+            <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>Lanjut</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="result-screen">
+        <h2>Hasil Akhir Anda</h2>
+        <div class="score-display" id="final-score">0 / 0</div>
+        <p id="result-summary"></p>
+        
+        <div style="margin: 20px 0;">
+            <button class="btn" onclick="exitToMenu()">Pilih Mode Lain</button>
+        </div>
+
+        <h3 style="text-align: left; margin-bottom: 10px;">Review Pembahasan</h3>
+        <div class="review-container" id="review-container"></div>
+    </div>
+</div>
+
+<script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playSound(type) {
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'correct') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.4);
+        } else if (type === 'wrong') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(130, audioCtx.currentTime + 0.15);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.35);
+        }
+    }
+
+    function triggerVibration() {
+        if ("vibrate" in navigator) {
+            navigator.vibrate([200, 100, 200]);
+        }
+    }
+
+    function shuffleArray(array) {
+        let cur = array.length, randomIdx;
+        while (cur !== 0) {
+            randomIdx = Math.floor(Math.random() * cur);
+            cur--;
+            [array[cur], array[randomIdx]] = [array[randomIdx], array[cur]];
+        }
+        return array;
+    }
+
+    // Database 60 Soal Berdasarkan Kisi-kisi ASTS IPS Kelas IX
+    const rawBank = [
+        { q: "Menurut Selo Soemardjan, perubahan sosial merupakan perubahan yang terjadi pada...", opt: ["lembaga kemasyarakatan yang mempengaruhi sistem sosial", "struktur geografi dan iklim wilayah", "mesin industri dan otomatisasi robot", "mode pakaian dan tren gaya rambut"], ans: "lembaga kemasyarakatan yang mempengaruhi sistem sosial", exp: "Selo Soemardjan mendefinisikan perubahan sosial sebagai perubahan pada lembaga kemasyarakatan di dalam masyarakat yang mempengaruhi sistem sosialnya[span_2](start_span)[span_2](end_span)[span_3](start_span)[span_3](end_span)." },
+        { q: "Proses perubahan sosial yang berlangsung secara lambat dan memerlukan waktu lama disebut...", opt: ["Evolusi", "Revolusi", "Planned Change", "Regress"], ans: "Evolusi", exp: "Evolusi adalah perubahan yang terjadi secara lambat melalui penyesuaian masyarakat terhadap lingkungannya[span_4](start_span)[span_4](end_span)." },
+        { q: "Perubahan sosial budaya yang berlangsung secara cepat serta mendasar dinamakan...", opt: ["Revolusi", "Evolusi", "Progress", "Perubahan Kecil"], ans: "Revolusi", exp: "Revolusi terjadi dalam waktu cepat dan mengubah dasar-dasar struktur sosial masyarakat[span_5](start_span)[span_5](end_span)." },
+        { q: "Perubahan tren gaya rambut dan model pakaian remaja merupakan contoh dari...", opt: ["Perubahan Kecil", "Perubahan Besar", "Revolusi Sosial", "Planned Change"], ans: "Perubahan Kecil", exp: "Perubahan kecil hanya terjadi pada aspek tertentu tanpa mempengaruhi struktur sosial secara mendasar[span_6](start_span)[span_6](end_span)." },
+        { q: "Pelaksanaan program Keluarga Berencana (KB) dan pembangunan jalan tol oleh pemerintah termasuk...", opt: ["Planned Change (Direncanakan)", "Unplanned Change", "Perubahan Regress", "Perubahan Evolusi"], ans: "Planned Change (Direncanakan)", exp: "Planned change sengaja dirancang oleh pihak agen perubahan (agent of change) seperti pemerintah[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)." },
+        { q: "Peristiwa bencana alam banjir yang merusak pemukiman warga tergolong dalam bentuk...", opt: ["Unplanned Change (Tidak Direncanakan)", "Planned Change", "Progress", "Perubahan Kecil"], ans: "Unplanned Change (Tidak Direncanakan)", exp: "Unplanned change terjadi di luar jangkauan pengawasan dan rencana masyarakat[span_9](start_span)[span_9](end_span)." },
+        { q: "Perubahan sosial yang menguntungkan dan membawa kemajuan bagi kehidupan warga dinamakan...", opt: ["Progress", "Regress", "Evolusi", "Revolusi"], ans: "Progress", exp: "Progress merupakan perubahan yang mengarah pada kemajuan tatanan hidup[span_10](start_span)[span_10](end_span)." },
+        { q: "Perubahan yang menimbulkan kemunduran atau kerugian bagi masyarakat dinamakan...", opt: ["Regress", "Progress", "Inovasi", "Akulturasi"], ans: "Regress", exp: "Regress membawa dampak kerugian atau kemunduran bagi kehidupan sosial[span_11](start_span)[span_11](end_span)." },
+        { q: "Otomatisasi mesin pengganti tenaga manusia merupakan pendorong perubahan sosial dari faktor...", opt: ["Internal penemuan baru (inovasi)", "Eksternal bencana alam", "Eksternal peperangan", "Internal konflik vertikal"], ans: "Internal penemuan baru (inovasi)", exp: "Perkembangan IPTEK dan penemuan baru merupakan faktor internal dari dalam masyarakat[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)." },
+        { q: "Bertambah dan berkurangnya populasi penduduk di suatu wilayah merupakan faktor pendorong...", opt: ["Internal perubahan sosial", "Eksternal perubahan sosial", "Akulturasi budaya", "Westernisasi"], ans: "Internal perubahan sosial", exp: "Dinamika pertambahan/pengurangan penduduk adalah faktor internal pendorong perubahan sosial[span_14](start_span)[span_14](end_span)[span_15](start_span)[span_15](end_span)." },
+        { q: "Konflik sosial internal antara pihak masyarakat dengan pengembang termasuk pendorong...", opt: ["Internal perubahan sosial", "Eksternal bencana alam", "Pengaruh budaya luar", "Evolusi budaya"], ans: "Internal perubahan sosial", exp: "Konflik sosial di dalam masyarakat tergolong faktor pendorong internal[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)." },
+        { q: "Masuknya tren kebudayaan Korea (K-Pop) yang mengubah gaya hidup remaja merupakan faktor...", opt: ["Eksternal perubahan sosial", "Internal inovasi", "Dinamika penduduk", "Bencana alam"], ans: "Eksternal perubahan sosial", exp: "Interaksi dengan kebudayaan asing merupakan faktor eksternal perubahan sosial[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)." },
+        { q: "Terciptanya pola pikir yang maju, rasional, dan terbuka merupakan salah satu...", opt: ["Dampak positif perubahan sosial", "Dampak negatif perubahan sosial", "Bentuk kemunduran tradisi", "Pengaruh westernisasi"], ans: "Dampak positif perubahan sosial", exp: "Pola pikir logis dan rasional merupakan salah satu dampak positif perubahan sosial[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)." },
+        { q: "Munculnya jurang pemisah ekonomi antarkelompok masyarakat akibat perubahan dinamakan...", opt: ["Kesenjangan sosial", "Integrasi sosial", "Modernisasi", "Akulturasi"], ans: "Kesenjangan sosial", exp: "Kesenjangan sosial ditandai oleh ketidaksetaraan kondisi ekonomi antarwarga[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)." },
+        { q: "Asal kata Modernisasi secara etimologis berasal dari bahasa Latin 'Modo' dan 'Ermus' yang berarti...", opt: ["Cara dan Masa Kini", "Lama dan Tradisional", "Barat dan Luar", "Maju dan Pintar"], ans: "Cara dan Masa Kini", exp: "Modo artinya cara, sedangkan Ermus berarti masa kini[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span)." },
+        { q: "Ciri utama masyarakat yang mengalami proses modernisasi adalah...", opt: ["Pola pikir rasional dan ilmiah", "Mengabaikan ilmu pengetahuan", "Mempercayai hal-hal takhayul", "Menutup diri dari hal baru"], ans: "Pola pikir rasional dan ilmiah", exp: "Masyarakat modern berpikiran ilmiah, logis, serta terbuka terhadap hal-hal baru[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span)." },
+        { q: "Meniru gaya hidup dan pergaulan barat secara mentah-mentah tanpa filter disebut...", opt: ["Westernisasi", "Modernisasi", "Globalisasi", "Akulturasi"], ans: "Westernisasi", exp: "Westernisasi adalah proses meniru gaya hidup barat tanpa menyaring nilainya[span_28](start_span)[span_28](end_span)." },
+        { q: "Miskonsepsi mendasar yang sering terjadi mengenai konsep modernisasi adalah...", opt: ["Menganggap modernisasi sama dengan westernisasi", "Menggunakan teknologi ilmiah", "Mengutamakan efisiensi kerja", "Memanfaatkan perkembangan IPTEK"], ans: "Menganggap modernisasi sama dengan westernisasi", exp: "Kesalahpahaman umum sering mengidentikkan modernisasi dengan westernisasi[span_29](start_span)[span_29](end_span)[span_30](start_span)[span_30](end_span)." },
+        { q: "Modernisasi transaksi ekonomi di pedesaan dan perkotaan ditandai oleh...", opt: ["Penggunaan sistem pembayaran QRIS", "Sistem barter barang", "Penggunaan mata uang komoditas", "Perdagangan tradisional tanpa alat ukur"], ans: "Penggunaan sistem pembayaran QRIS", exp: "Penggunaan pembayaran digital (QRIS) mempercepat transaksi di era modern[span_31](start_span)[span_31](end_span)[span_32](start_span)[span_32](end_span)." },
+        { q: "Bentuk modernisasi pertanian yang dilakukan masyarakat desa contohnya adalah...", opt: ["Penggunaan mesin traktor menggantikan kerbau", "Penggunaan cangkul kayu", "Penjualan lahan pertanian", "Sistem panen tradisional"], ans: "Penggunaan mesin traktor menggantikan kerbau", exp: "Penggunaan traktor mesin meningkatkan efisiensi pembajakan sawah[span_33](start_span)[span_33](end_span)[span_34](start_span)[span_34](end_span)." },
+        { q: "Kebiasaan membeli barang secara berlebihan di luar batas kebutuhan pokok dinamakan...", opt: ["Konsumerisme", "Hedonisme", "Individualisme", "Nasionalisme"], ans: "Konsumerisme", exp: "Konsumerisme adalah pola hidup boros membeli barang yang tidak esensial[span_35](start_span)[span_35](end_span)[span_36](start_span)[span_36](end_span)." },
+        { q: "Penyebab utama terpacunya perilaku konsumerisme di era digital adalah...", opt: ["Gempuran iklan media sosial dan e-commerce", "Kelangkaan barang di pasar", "Tingginya harga kebutuhan pokok", "Kurangnya jaringan internet"], ans: "Gempuran iklan media sosial dan e-commerce", exp: "Iklan menarik dan kemudahan belanja online memicu perilaku konsumerisme[span_37](start_span)[span_37](end_span)[span_38](start_span)[span_38](end_span)." },
+        { q: "Peralihan sarana hiburan modern pada masyarakat saat ini ditunjukkan oleh...", opt: ["Penggunaan media digital dan gawai", "Permainan egrang", "Permainan kelereng", "Pertunjukan wayang kulit"], ans: "Penggunaan media digital dan gawai", exp: "Masyarakat modern memanfaatkan platform digital sebagai sarana hiburan[span_39](start_span)[span_39](end_span)[span_40](start_span)[span_40](end_span)." },
+        { q: "Proses keterhubungan antarnegara di dunia tanpa terhalang batas wilayah dinamakan...", opt: ["Globalisasi", "Modernisasi", "Westernisasi", "Sekularisasi"], ans: "Globalisasi", exp: "Globalisasi menghubungkan antarbangsa di dunia secara transparan[span_41](start_span)[span_41](end_span)." },
+        { q: "Contoh bentuk penerapan globalisasi di bidang ekonomi antarnegara ASEAN adalah...", opt: ["Pasar bebas AFTA", "UNESCO", "Pertukaran budaya", "Pengiriman pasukan keamanan"], ans: "Pasar bebas AFTA", exp: "AFTA (ASEAN Free Trade Area) merupakan bentuk integrasi pasar bebas ekonomi kawasan[span_42](start_span)[span_42](end_span)[span_43](start_span)[span_43](end_span)." },
+        { q: "Pandangan hidup yang menganggap bahwa kenikmatan materi adalah tujuan utama dinamakan...", opt: ["Hedonisme", "Konsumerisme", "Individualisme", "Etnosentrisme"], ans: "Hedonisme", exp: "Hedonisme mengukur tujuan hidup dari kesenangan dan materi semata[span_44](start_span)[span_44](end_span)[span_45](start_span)[span_45](end_span)." },
+        { q: "Pengetahuan, tradisi, dan nilai lokal yang bijaksana serta diwariskan dinamakan...", opt: ["Kearifan Lokal", "Globalisasi", "Modernisasi", "Westernisasi"], ans: "Kearifan Lokal", exp: "Kearifan lokal memuat nilai-nilai pandangan hidup bijak lokal[span_46](start_span)[span_46](end_span)[span_47](start_span)[span_47](end_span)." },
+        { q: "Tradisi lumbung padi pada masyarakat Baduy merupakan kearifan lokal yang bertujuan...", opt: ["Menjaga ketahanan pangan dan keseimbangan alam", "Menjual beras ke pasar impor", "Menumpuk harta individu", "Menghapus tradisi bercocok tanam"], ans: "Menjaga ketahanan pangan dan keseimbangan alam", exp: "Lumbung padi Baduy berfungsi menjamin pasokan pangan saat paceklik[span_48](start_span)[span_48](end_span)[span_49](start_span)[span_49](end_span)." },
+        { q: "Fungsi kearifan lokal dalam struktur masyarakat adalah untuk...", opt: ["Menjaga kelestarian alam dan integrasi sosial", "Mendorong perilaku individualis", "Memecah persatuan antarwarga", "Menghilangkan tradisi leluhur"], ans: "Menjaga kelestarian alam dan integrasi sosial", exp: "Kearifan lokal memelihara lingkungan dan mempererat persatuan sosial[span_50](start_span)[span_50](end_span)[span_51](start_span)[span_51](end_span)." },
+        { q: "Cara bijak dalam menyikapi informasi beredarnya berita hoaks adalah...", opt: ["Menyaring berita dan mengecek sumber resmi", "Membagikan pesan langsung ke grup kontak", "Percaya penuh tanpa klarifikasi", "Menghapus aplikasi komunikasi"], ans: "Menyaring berita dan mengecek sumber resmi", exp: "Klarifikasi sumber dan berpikir kritis adalah penangkal hoaks terbaik[span_52](start_span)[span_52](end_span)[span_53](start_span)[span_53](end_span)." },
+        { q: "Posisi ideal Kearifan Lokal di tengah arus Modernisasi adalah sebagai...", opt: ["Benteng penyeimbang dan penyaring budaya luar", "Penghambat perkembangan teknologi", "Pengganti seluruh teknologi modern", "Pemicu perpecahan antarbudaya"], ans: "Benteng penyeimbang dan penyaring budaya luar", exp: "Kearifan lokal membentengi dan menyaring pengaruh negatif luar[span_54](start_span)[span_54](end_span)[span_55](start_span)[span_55](end_span)." },
+        { q: "Perpaduan arsitektur lokal dengan budaya Hindu-Buddha/Islam pada Masjid Demak disebut...", opt: ["Akulturasi budaya", "Westernisasi", "Asimilasi total", "Modernisasi fisik"], ans: "Akulturasi budaya", exp: "Akulturasi adalah perpaduan dua budaya tanpa menghilangkan budaya asli[span_56](start_span)[span_56](end_span)[span_57](start_span)[span_57](end_span)." },
+        { q: "Sikap mementingkan diri sendiri tanpa memedulikan orang lain disebut...", opt: ["Individualisme", "Hedonisme", "Konsumerisme", "Sekularisme"], ans: "Individualisme", exp: "Individualisme berfokus pada kepentingan pribadi dan mengabaikan sosial[span_58](start_span)[span_58](end_span)[span_59](start_span)[span_59](end_span)." },
+        { q: "Risiko penggunaan bahasa asing yang berlebihan tanpa dibarengi bahasa nasional adalah...", opt: ["Mengikis identitas jati diri bangsa", "Meningkatkan pendapatan negara", "Mempercepat infrastruktur", "Menurunkan angka inflasi"], ans: "Mengikis identitas jati diri bangsa", exp: "Lupa bahasa nasional/daerah dapat melunturkan identitas bangsa[span_60](start_span)[span_60](end_span)[span_61](start_span)[span_61](end_span)." },
+        { q: "Proses masuknya budaya asing yang dipaksakan pada masa penjajahan disebut...", opt: ["Penetrasi Violente", "Penetrasi Pasifique", "Akulturasi", "Asimilasi"], ans: "Penetrasi Violente", exp: "Penetrasi violente adalah pemaksaan unsur kebudayaan secara paksa/kekerasan[span_62](start_span)[span_62](end_span)[span_63](start_span)[span_63](end_span)." },
+        { q: "Pemanfaatan media sosial untuk mempromosikan tarian daerah merupakan bentuk...", opt: ["Pelestarian budaya berbasis teknologi digital", "Kemunduran nilai kearifan lokal", "Perilaku konsumerisme seni", "Penolakan terhadap teknologi"], ans: "Pelestarian budaya berbasis teknologi digital", exp: "Promosi digital adalah bentuk pelestarian budaya daerah secara modern[span_64](start_span)[span_64](end_span)[span_65](start_span)[span_65](end_span)." },
+        { q: "Sikap tepat terhadap perkembangan IPTEK pada era globalisasi adalah...", opt: ["Memanfaatkannya secara bijak untuk hal positif", "Menolak seluruh teknologi baru", "Menerima tanpa menyaring dampaknya", "Menggunakan IPTEK untuk merusak"], ans: "Memanfaatkannya secara bijak untuk hal positif", exp: "IPTEK harus dimanfaatkan secara positif dan bertanggung jawab[span_66](start_span)[span_66](end_span)[span_67](start_span)[span_67](end_span)." },
+        { q: "Langkah penting dalam menghadapi tantangan globalisasi ekonomi adalah...", opt: ["Mencintai produk dalam negeri dan meningkatkan SDM", "Membeli barang impor berlebihan", "Menutup akses perdagangan luar", "Mematikan UMKM lokal"], ans: "Mencintai produk dalam negeri dan meningkatkan SDM", exp: "Kualitas SDM dan produk dalam negeri memperkuat ekonomi nasional[span_68](start_span)[span_68](end_span)[span_69](start_span)[span_69](end_span)." },
+        { q: "Filter utama bangsa Indonesia dalam menyaring budaya asing adalah nilai-nilai...", opt: ["Pancasila dan UUD 1945", "Budaya populer asing", "Sistem ekonomi liberal", "Tren mode global"], ans: "Pancasila dan UUD 1945", exp: "Nilai Pancasila adalah pedoman penyaring Pengaruh negatif globalisasi[span_70](start_span)[span_70](end_span)[span_71](start_span)[span_71](end_span)." },
+        { q: "Dampak positif globalisasi di bidang komunikasi adalah...", opt: ["Mempermudah pertukaran informasi secara cepat", "Menaikkan tarif biaya komunikasi", "Memutus silaturahmi antarwarga", "Meningkatkan isolasi daerah"], ans: "Mempermudah pertukaran informasi secara cepat", exp: "Globalisasi komunikasi mempercepat alur informasi secara real-time[span_72](start_span)[span_72](end_span)[span_73](start_span)[span_73](end_span)." },
+        { q: "Perilaku sehari-hari yang mendukung pelestarian kearifan lokal adalah...", opt: ["Menggunakan bahasa daerah yang sopan dan bergotong royong", "Menganggap tradisi lokal sudah Kuno", "Menolak bersosialisasi dengan tetangga", "Mengagumi budaya asing secara berlebihan"], ans: "Menggunakan bahasa daerah yang sopan dan bergotong royong", exp: "Sikap santun dan gotong royong memelihara kearifan lokal[span_74](start_span)[span_74](end_span)[span_75](start_span)[span_75](end_span)." },
+        { q: "Penyebab utama mulai ditinggalkannya tradisi kearifan lokal oleh remaja adalah...", opt: ["Anggapan bahwa budaya luar lebih modern dibanding tradisi sendiri", "Kuatnya rasa nasionalisme", "Banyaknya pementasan tarian daerah", "Kurangnya jaringan komunikasi"], ans: "Anggapan bahwa budaya luar lebih modern dibanding tradisi sendiri", exp: "Anggapan tradisi lokal ketinggalan jaman membuat generasi muda menjauh[span_76](start_span)[span_76](end_span)[span_77](start_span)[span_77](end_span)." },
+        { q: "Masuknya kebudayaan asing secara damai dan tanpa paksaan dinamakan...", opt: ["Penetrasi Pasifique", "Penetrasi Violente", "Kolonialisme", "Imperialisme"], ans: "Penetrasi Pasifique", exp: "Penetrasi pasifique adalah masuknya kebudayaan secara damai[span_78](start_span)[span_78](end_span)." },
+        { q: "Pembauran dua budaya yang menghasilkan budaya baru tanpa membuang budaya asli disebut...", opt: ["Akulturasi", "Asimilasi", "Amalgamasi", "Difusi"], ans: "Akulturasi", exp: "Akulturasi memadukan unsur baru tanpa merusak kebudayaan asli[span_79](start_span)[span_79](end_span)[span_80](start_span)[span_80](end_span)." },
+        { q: "Proses leburnya dua kebudayaan berbeda menjadi satu kebudayaan baru dinamakan...", opt: ["Asimilasi", "Akulturasi", "Evolusi", "Modernisasi"], ans: "Asimilasi", exp: "Asimilasi membentuk budaya baru yang menggantikan budaya lama[span_81](start_span)[span_81](end_span)." },
+        { q: "Pembangunan infrastruktur digital di pedesaan bertujuan untuk mendorong...", opt: ["Modernisasi dan pemerataan pembangunan", "Kesenjangan sosial desa dan kota", "Gaya hidup konsumtif warga desa", "Pudarnya nilai gotong royong"], ans: "Modernisasi dan pemerataan pembangunan", exp: "Jaringan digital mendorong pemerataan modernisasi produktif[span_82](start_span)[span_82](end_span)[span_83](start_span)[span_83](end_span)." },
+        { q: "Sikap yang mengagungkan kebudayaan sendiri dan merendahkan budaya lain dinamakan...", opt: ["Etnosentrisme", "Chauvinisme", "Relativisme Budaya", "Pluralisme"], ans: "Etnosentrisme", exp: "Etnosentrisme adalah pandangan memandang rendah kebudayaan kelompok lain[span_84](start_span)[span_84](end_span)." },
+        { q: "Peran kearifan lokal dalam menjaga lingkungan alam adalah...", opt: ["Mencegah eksploitasi alam berlebihan", "Menghabiskan hutan untuk perumahan", "Menjual hasil tambang ilegal", "Mencemari wilayah sungai"], ans: "Mencegah eksploitasi alam berlebihan", exp: "Aturan adat membatasi pemanfaatan alam agar tetap lestari[span_85](start_span)[span_85](end_span)[span_86](start_span)[span_86](end_span)." },
+        { q: "Dampak positif masuknya musik asing jika disikapi secara bijak adalah...", opt: ["Menginspirasi inovasi industri kreatif lokal", "Menghilangkan lagu daerah", "Membuat remaja malas belajar", "Mengabaikan bahasa Indonesia"], ans: "Menginspirasi inovasi industri kreatif lokal", exp: "Unsur budaya luar dapat menginspirasi inovasi musik dalam negeri[span_87](start_span)[span_87](end_span)[span_88](start_span)[span_88](end_span)." },
+        { q: "Peristiwa Reformasi 1998 di Indonesia tergolong ke dalam bentuk perubahan...", opt: ["Revolusi dan perubahan besar", "Evolusi lambat", "Perubahan kecil", "Unplanned change"], ans: "Revolusi dan perubahan besar", exp: "Reformasi 1998 mengubah tatanan politik-sosial secara cepat dan mendasar[span_89](start_span)[span_89](end_span)." },
+        { q: "Sikap tertutup yang menolak perbaikan dan hal baru dari luar dinamakan...", opt: ["Konservatif", "Open-minded", "Modern", "Rasional"], ans: "Konservatif", exp: "Sikap tertutup/konservatif menghambat masuknya perbaikan yang bermanfaat[span_90](start_span)[span_90](end_span)[span_91](start_span)[span_91](end_span)." },
+        { q: "Penyebaran kebudayaan dari satu pihak ke pihak lain dinamakan...", opt: ["Difusi Kebudayaan", "Akulturasi", "Asimilasi", "Modernisasi"], ans: "Difusi Kebudayaan", exp: "Difusi adalah proses penyebaran gagasan atau kebudayaan[span_92](start_span)[span_92](end_span)." },
+        { q: "Kerugian utama dari kebiasaan konsumerisme bagi remaja adalah...", opt: ["Kesulitan menabung dan timbulnya boros", "Meningkatnya prestasi belajar", "Bertambahnya kepedulian sosial", "Meningkatnya pendapatan daerah"], ans: "Kesulitan menabung dan timbulnya boros", exp: "Konsumerisme memicu boros dan menghambat pengelolaan uang[span_93](start_span)[span_93](end_span)[span_94](start_span)[span_94](end_span)." },
+        { q: "Tujuan pembuatan konten digital tentang sejarah di museum adalah...", opt: ["Mempermudah edukasi sejarah bagi generasi muda", "Menghapus koleksi museum", "Menjual benda sejarah online", "Mengganti fakta sejarah"], ans: "Mempermudah edukasi sejarah bagi generasi muda", exp: "Digitalisasi memudahkan penyebaran edukasi sejarah daerah[span_95](start_span)[span_95](end_span)[span_96](start_span)[span_96](end_span)." },
+        { q: "Tujuan pelaksanaan pentas seni budaya daerah secara berkala adalah...", opt: ["Melestarikan identitas budaya daerah", "Menghabiskan anggaran daerah", "Menunjukkan keunggulan satu suku", "Menolak kehadiran wisatawan"], ans: "Melestarikan identitas budaya daerah", exp: "Pentas seni memelihara warisan budaya dan kebanggaan daerah[span_97](start_span)[span_97](end_span)[span_98](start_span)[span_98](end_span)." },
+        { q: "Manfaat utama transaksi e-commerce bagi pelaku usaha lokal adalah...", opt: ["Memperluas jangkauan pasar hingga ke luar daerah", "Meningkatkan biaya produksi", "Membatasi pilihan barang", "Memutus jaringan pemasaran"], ans: "Memperluas jangkauan pasar hingga ke luar daerah", exp: "E-commerce menghubungkan produk lokal ke pasar nasional/global[span_99](start_span)[span_99](end_span)[span_100](start_span)[span_100](end_span)." },
+        { q: "Penerapan sistem Artificial Intelligence (AI) di dunia kerja merupakan contoh...", opt: ["Perubahan besar akibat IPTEK", "Perubahan kecil tanpa dampak", "Kemunduran budaya", "Evolusi lambat"], ans: "Perubahan besar akibat IPTEK", exp: "Kecerdasan buatan merubah struktur profesi secara signifikan[span_101](start_span)[span_101](end_span)." },
+        { q: "Dampak buruk munculnya individualisme di lingkungan desa adalah...", opt: ["Memudarnya nilai gotong royong", "Meningkatnya ilmu pengetahuan", "Mempermudah komunikasi", "Terbuka lapangan kerja"], ans: "Memudarnya nilai gotong royong", exp: "Sikap individualis mengikis tradisi kebersamaan dan gotong royong[span_102](start_span)[span_102](end_span)[span_103](start_span)[span_103](end_span)." },
+        { q: "Upaya pembentukan karakter di sekolah dalam menyikapi globalisasi adalah...", opt: ["Menanamkan nilai Pancasila", "Melarang internet total", "Menghapus pelajaran seni", "Mewajibkan budaya luar"], ans: "Menanamkan nilai Pancasila", exp: "Pendidikan karakter bernilai Pancasila menguatkan filter moral[span_104](start_span)[span_104](end_span)[span_105](start_span)[span_105](end_span)." },
+        { q: "Sikap open-minded dalam menerima pengaruh globalisasi ditunjukkan dengan...", opt: ["Menyaring hal baru yang bermanfaat secara kritis", "Menerima semua budaya luar tanpa penyaring", "Menolak teknologi baru", "Mengagumi budaya luar secara berlebihan"], ans: "Menyaring hal baru yang bermanfaat secara kritis", exp: "Sikap terbuka disertai pemikiran kritis menjaga arah modernisasi yang positif[span_106](start_span)[span_106](end_span)[span_107](start_span)[span_107](end_span)." }
+    ];
+
+    let activeBank = [];
+    let currentIdx = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    function selectMode(mode) {
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        let shuffledMaster = shuffleArray([...rawBank]);
+
+        if (mode === 'short') {
+            activeBank = shuffledMaster.slice(0, 10);
+        } else if (mode === 'exam') {
+            activeBank = shuffledMaster.slice(0, 40);
+        } else if (mode === 'rank') {
+            activeBank = shuffledMaster.slice(0, 60);
+        }
+
+        activeBank = activeBank.map(item => {
+            let shuffledOpts = shuffleArray([...item.opt]);
+            return {
+                q: item.q,
+                opt: shuffledOpts,
+                ans: item.ans,
+                exp: item.exp
+            };
+        });
+
+        document.getElementById("mode-screen").style.display = "none";
+        document.getElementById("quiz-screen").style.display = "block";
+
+        currentIdx = 0;
+        score = 0;
+        userAnswers = [];
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        resetState();
+        let q = activeBank[currentIdx];
+
+        document.getElementById("question-number").innerText = `Soal ${currentIdx + 1} dari ${activeBank.length}`;
+        document.getElementById("score-count").innerText = `Skor: ${score}`;
+        document.getElementById("progress-bar").style.width = `${(currentIdx / activeBank.length) * 100}%`;
+        document.getElementById("question-text").innerText = q.q;
+
+        q.opt.forEach((o) => {
+            let btn = document.createElement("button");
+            btn.innerText = o;
+            btn.classList.add("option-btn");
+            btn.onclick = () => selectAnswer(o, btn);
+            document.getElementById("options-container").appendChild(btn);
+        });
+    }
+
+    function resetState() {
+        document.getElementById("next-btn").disabled = true;
+        document.getElementById("explanation-box").style.display = "none";
+        document.getElementById("options-container").innerHTML = "";
+    }
+
+    function selectAnswer(selectedOpt, selectedBtn) {
+        let q = activeBank[currentIdx];
+        let btns = document.getElementById("options-container").children;
+
+        userAnswers.push({
+            q: q.q,
+            selected: selectedOpt,
+            correct: q.ans,
+            exp: q.exp
+        });
+
+        if (selectedOpt === q.ans) {
+            score += 10;
+            selectedBtn.classList.add("correct");
+            playSound('correct');
+        } else {
+            selectedBtn.classList.add("incorrect");
+            for (let b of btns) {
+                if (b.innerText === q.ans) {
+                    b.classList.add("correct");
+                }
+            }
+            playSound('wrong');
+            triggerVibration();
+        }
+
+        for (let b of btns) b.disabled = true;
+
+        document.getElementById("explanation-text").innerText = q.exp;
+        document.getElementById("explanation-box").style.display = "block";
+        document.getElementById("score-count").innerText = `Skor: ${score}`;
+        document.getElementById("next-btn").disabled = false;
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < activeBank.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+
+        let maxScore = activeBank.length * 10;
+        document.getElementById("final-score").innerText = `${score} / ${maxScore}`;
+
+        let summary = score >= (maxScore * 0.8) ? "Sangat Baik! Pemahaman materi Anda sangat matang!" : "Bagus! Pelajari kembali poin-poin pembahasan di bawah untuk menyempurnakan nilai.";
+        document.getElementById("result-summary").innerText = summary;
+
+        let reviewBox = document.getElementById("review-container");
+        reviewBox.innerHTML = "";
+
+        userAnswers.forEach((ans, i) => {
+            let isCorrect = ans.selected === ans.correct;
+            let div = document.createElement("div");
+            div.className = `review-item ${isCorrect ? 'correct-item' : 'incorrect-item'}`;
+            div.innerHTML = `
+                <div><strong>${i + 1}. ${ans.q}</strong></div>
+                <div>Jawaban Anda: ${ans.selected} ${isCorrect ? '✅' : '❌'}</div>
+                ${!isCorrect ? `<div style="color: green;">Jawaban Benar: ${ans.correct}</div>` : ''}
+                <div style="font-size:0.85rem; color:#555; margin-top:4px;"><strong>Pembahasan:</strong> ${ans.exp}</div>
+            `;
+            reviewBox.appendChild(div);
+        });
+    }
+
+    function exitToMenu() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "none";
+        document.getElementById("mode-screen").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
