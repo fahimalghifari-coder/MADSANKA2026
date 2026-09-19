@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- FontAwesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 CSS (Opsional, tapi direkomendasikan untuk styling bawaan) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
     <style>
         :root {
             --bg-body: #f4f7f6;
@@ -126,7 +129,7 @@
             margin-bottom: 25px;
         }
 
-        /* --- SUMMARY CARDS (Seperti di gambar) --- */
+        /* --- SUMMARY CARDS --- */
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -237,7 +240,7 @@
             background-color: #f3f4f6;
         }
 
-        /* Warna Kartu (Mengikuti gaya gambar referensi) */
+        /* Warna Kartu */
         .card-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .card-green { background: linear-gradient(135deg, #34d399, #16a34a); }
         .card-cyan { background: linear-gradient(135deg, #38bdf8, #0284c7); }
@@ -367,7 +370,6 @@
                     <div class="module-body">
                         <h3>Bahasa Indonesia</h3>
                         <p>Latihan soal tata bahasa, teks bacaan, dan kesusastraan.</p>
-                        <!-- Fungsi openModul dipanggil saat diklik -->
                         <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
                     </div>
                 </div>
@@ -537,6 +539,9 @@
         </footer>
     </main>
 
+    <!-- CDN SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- SCRIPT JAVASCRIPT -->
     <script>
         // Fungsi untuk toggle Sidebar di Mobile
@@ -544,10 +549,22 @@
             document.getElementById('sidebar').classList.toggle('show');
         }
 
-        // Fungsi klik tombol buka modul (Coming Soon & Redirect Link)
+        // Fungsi klik tombol buka modul (Menggunakan SweetAlert)
         function openModul(link) {
             if (link === 'comingsoon' || link === '' || link === '#') {
-                alert("Coming Soon! File latihan soal sedang dalam tahap persiapan.");
+                // Memanggil SweetAlert2 alih-alih alert bawaan
+                Swal.fire({
+                    title: 'Coming Soon!',
+                    text: 'File latihan soal sedang dalam tahap persiapan.',
+                    icon: 'info',
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#2563eb', // Warna tombol disesuaikan dengan tema biru
+                    background: '#ffffff',
+                    customClass: {
+                        title: 'poppins-font',
+                        popup: 'poppins-font'
+                    }
+                });
             } else {
                 // Jika link sudah ada, maka akan diarahkan ke halaman tujuan
                 window.location.href = link; 
