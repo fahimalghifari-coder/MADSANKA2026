@@ -316,9 +316,7 @@
             <i class="fa-solid fa-graduation-cap"></i> MADSANKA IX
         </div>
         <ul class="sidebar-menu">
-            <li><a href="index.html" class="active"><i class="fa-solid fa-border-all"></i> Dashboard</a></li>
-            <!-- Menu "Semua Pelajaran" sudah dihapus -->
-            <!-- Menu "Riwayat Latihan" diperbaiki dengan fungsi JS -->
+            <li><a href="#" class="active"><i class="fa-solid fa-border-all"></i> Dashboard</a></li>
             <li><a onclick="openRiwayat()"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Latihan</a></li>
         </ul>
     </aside>
@@ -353,7 +351,8 @@
                     <i class="fa-solid fa-check-circle" style="color: #10b981; background: #d1fae5;"></i>
                     <div>
                         <h4 style="color: #6b7280; font-size: 0.85rem;">Tugas Selesai</h4>
-                        <h2>0 / 13</h2>
+                        <!-- ID ditambahkan di sini agar bisa diubah otomatis oleh JavaScript -->
+                        <h2 id="tugas-selesai-count">0 / 13</h2>
                     </div>
                 </div>
             </div>
@@ -551,7 +550,7 @@
             document.getElementById('sidebar').classList.toggle('show');
         }
 
-        // Fungsi klik tombol buka modul (Menggunakan SweetAlert)
+        // Fungsi klik tombol buka modul
         function openModul(link) {
             if (link === 'comingsoon' || link === '' || link === '#') {
                 Swal.fire({
@@ -571,13 +570,55 @@
             }
         }
 
-        // Fungsi khusus untuk pemberitahuan fitur Riwayat Latihan
+        // ==========================================
+        // SISTEM RIWAYAT LATIHAN & TUGAS SELESAI
+        // ==========================================
+
+        // 1. Inisialisasi Data (Simulasi)
+        function initData() {
+            let riwayat = localStorage.getItem('riwayat_latihan');
+            
+            // Jika belum ada data sama sekali di browser, kita buatkan data contoh 
+            // agar bisa melihat tampilannya secara langsung.
+            if (!riwayat) {
+                let dataContoh = ["Ilmu Pengetahuan Sosial", "Bahasa Arab"];
+                localStorage.setItem('riwayat_latihan', JSON.stringify(dataContoh));
+            }
+        }
+
+        // 2. Fungsi Update Angka "Tugas Selesai" di Dashboard
+        function updateTugasSelesai() {
+            // Ambil data dari localStorage
+            let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+            
+            // Ubah teks h2 di kartu tugas selesai sesuai jumlah array
+            document.getElementById('tugas-selesai-count').innerText = riwayat.length + " / 13";
+        }
+
+        // 3. Fungsi Menampilkan Pop-Up Daftar Riwayat Latihan
         function openRiwayat() {
+            let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+            let htmlList = "";
+
+            if (riwayat.length === 0) {
+                htmlList = "<p style='color: #6b7280; font-size: 0.95rem;'>Belum ada latihan yang diselesaikan.</p>";
+            } else {
+                htmlList = "<ul style='text-align: left; font-size: 0.95rem; line-height: 2; color: #333; padding-left: 10px; list-style: none;'>";
+                // Lakukan perulangan untuk setiap pelajaran yang ada di riwayat
+                riwayat.forEach(item => {
+                    htmlList += `<li style="border-bottom: 1px solid #e5e7eb; padding: 5px 0;">
+                                    <i class="fa-solid fa-circle-check" style="color: #10b981; margin-right: 8px;"></i> 
+                                    <b>${item}</b>
+                                 </li>`;
+                });
+                htmlList += "</ul>";
+            }
+
             Swal.fire({
-                title: 'Info Fitur',
-                text: 'Fitur "Riwayat Latihan" belum tersedia dan sedang dalam proses pengembangan.',
-                icon: 'warning', // icon warning agar berbeda dengan coming soon modul
-                confirmButtonText: 'Kembali',
+                title: 'Riwayat Latihan Anda',
+                html: htmlList,
+                icon: 'success',
+                confirmButtonText: 'Tutup',
                 confirmButtonColor: '#2563eb',
                 background: '#ffffff',
                 customClass: {
@@ -586,6 +627,12 @@
                 }
             });
         }
+
+        // Jalankan inisialisasi & update angka saat halaman pertama kali dimuat
+        window.onload = function() {
+            initData();
+            updateTugasSelesai();
+        };
     </script>
 </body>
 </html>
