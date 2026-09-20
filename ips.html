@@ -601,6 +601,13 @@
         document.getElementById("mode-screen").style.display = "block";
     }
 </script>
-
+<script>
+    // Logika Sederhana: Begitu file IPS dibuka, otomatis catat ke riwayat
+    let riwayatIPS = JSON.parse(sessionStorage.getItem('riwayat_latihan')) || [];
+    if (!riwayatIPS.includes("Ilmu Pengetahuan Sosial")) {
+        riwayatIPS.push("Ilmu Pengetahuan Sosial");
+        sessionStorage.setItem('riwayat_latihan', JSON.stringify(riwayatIPS));
+    }
+</script>
 </body>
 </html>
