@@ -515,5 +515,13 @@
             document.getElementById(`bahas-${qIndex}`).style.display = 'block';
         }
     </script>
+    <script>
+    // Logika Sederhana: Begitu file Bahasa Arab dibuka, otomatis catat ke riwayat
+    let riwayatArab = JSON.parse(sessionStorage.getItem('riwayat_latihan')) || [];
+    if (!riwayatArab.includes("Bahasa Arab")) {
+        riwayatArab.push("Bahasa Arab");
+        sessionStorage.setItem('riwayat_latihan', JSON.stringify(riwayatArab));
+    }
+</script>
 </body>
 </html>
