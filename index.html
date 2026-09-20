@@ -351,7 +351,6 @@
                     <i class="fa-solid fa-check-circle" style="color: #10b981; background: #d1fae5;"></i>
                     <div>
                         <h4 style="color: #6b7280; font-size: 0.85rem;">Tugas Selesai</h4>
-                        <!-- ID ditambahkan di sini agar bisa diubah otomatis oleh JavaScript -->
                         <h2 id="tugas-selesai-count">0 / 13</h2>
                     </div>
                 </div>
@@ -570,25 +569,13 @@
             }
         }
 
-        // ==========================================
-        // SISTEM RIWAYAT LATIHAN & TUGAS SELESAI
-        // ==========================================
-
-        // 1. Inisialisasi Data (Reset ulang setiap kali halaman dimuat / refresh / pengguna baru)
-        function initData() {
-            // Perintah ini akan menghapus semua riwayat saat halaman dimuat
-            // Sehingga secara otomatis tugas selesai akan kembali ke 0
-            localStorage.removeItem('riwayat_latihan');
-        }
-
-        // 2. Fungsi Update Angka "Tugas Selesai" di Dashboard
+        // 1. Fungsi Update Angka "Tugas Selesai" di Dashboard
         function updateTugasSelesai() {
-            // Karena data sudah dihapus di initData(), array akan selalu kosong (0) pada saat di-refresh
             let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
             document.getElementById('tugas-selesai-count').innerText = riwayat.length + " / 13";
         }
 
-        // 3. Fungsi Menampilkan Pop-Up Daftar Riwayat Latihan
+        // 2. Fungsi Menampilkan Pop-Up Daftar Riwayat Latihan
         function openRiwayat() {
             let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
             let htmlList = "";
@@ -620,9 +607,8 @@
             });
         }
 
-        // Jalankan inisialisasi & update angka saat halaman pertama kali dimuat
+        // Jalankan update angka saat halaman pertama kali dimuat
         window.onload = function() {
-            initData();
             updateTugasSelesai();
         };
     </script>
