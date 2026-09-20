@@ -571,30 +571,23 @@
         }
 
         // ==========================================
-        // SISTEM RIWAYAT LATIHAN & TUGAS SELESAI
+        // SISTEM RIWAYAT LATIHAN (SESSION STORAGE)
         // ==========================================
 
-        // 1. Inisialisasi Data (Reset ulang setiap kali halaman dimuat / refresh / pengguna baru)
-        function initData() {
-            // Perintah ini akan menghapus semua riwayat saat halaman dimuat
-            // Sehingga secara otomatis tugas selesai akan kembali ke 0
-            localStorage.removeItem('riwayat_latihan');
-        }
-
-        // 2. Fungsi Update Angka "Tugas Selesai" di Dashboard
+        // 1. Fungsi Update Angka "Tugas Selesai" di Dashboard
         function updateTugasSelesai() {
-            // Karena data sudah dihapus di initData(), array akan selalu kosong (0) pada saat di-refresh
-            let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+            // Mengambil data dari sessionStorage, bukan localStorage
+            let riwayat = JSON.parse(sessionStorage.getItem('riwayat_latihan')) || [];
             document.getElementById('tugas-selesai-count').innerText = riwayat.length + " / 13";
         }
 
-        // 3. Fungsi Menampilkan Pop-Up Daftar Riwayat Latihan
+        // 2. Fungsi Menampilkan Pop-Up Daftar Riwayat Latihan
         function openRiwayat() {
-            let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+            let riwayat = JSON.parse(sessionStorage.getItem('riwayat_latihan')) || [];
             let htmlList = "";
 
             if (riwayat.length === 0) {
-                htmlList = "<p style='color: #6b7280; font-size: 0.95rem;'>Belum ada latihan yang diselesaikan.</p>";
+                htmlList = "<p style='color: #6b7280; font-size: 0.95rem;'>Belum ada latihan yang diselesaikan. Selesaikan minimal 1 mode kuis pada pelajaran untuk menampilkannya di sini.</p>";
             } else {
                 htmlList = "<ul style='text-align: left; font-size: 0.95rem; line-height: 2; color: #333; padding-left: 10px; list-style: none;'>";
                 riwayat.forEach(item => {
@@ -620,9 +613,8 @@
             });
         }
 
-        // Jalankan inisialisasi & update angka saat halaman pertama kali dimuat
+        // Jalankan update angka saat halaman dimuat
         window.onload = function() {
-            initData();
             updateTugasSelesai();
         };
     </script>
