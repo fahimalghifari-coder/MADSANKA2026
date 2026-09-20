@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Interaktif Bahasa Arab</title>
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --danger: #e74c3c;
+            --bg: #f5f6fa;
+            --card: #ffffff;
+            --text: #2f3640;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .question-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        .arabic-text {
+            font-size: 24px;
+            text-align: right;
+            direction: rtl;
+            font-family: 'Amiri', 'Traditional Arabic', serif;
+            margin-bottom: 15px;
+            color: #192a56;
+        }
+        .indo-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option {
+            background: #f1f2f6;
+            border: 2px solid #dcdde1;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: right;
+            direction: rtl;
+            transition: all 0.3s ease;
+        }
+        .option:hover:not(.disabled) {
+            background: #e1e2e6;
+            border-color: #bdc3c7;
+        }
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .option.correct {
+            background: #d4edda;
+            border-color: var(--primary);
+            color: #155724;
+        }
+        .option.wrong {
+            background: #f8d7da;
+            border-color: var(--danger);
+            color: #721c24;
+        }
+        .pembahasan {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            border-radius: 4px;
+            display: none;
+            font-size: 15px;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+        .shake-effect {
+            animation: shake 0.4s ease-in-out;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .start-btn {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto 30px auto;
+            padding: 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Latihan Soal Bahasa Arab (Interaktif)</h1>
+    <button class="start-btn" onclick="initAudio(); this.style.display='none';">Mulai & Aktifkan Suara</button>
+
+    <div class="quiz-container" id="quiz-container">
+        <!-- Soal akan di-generate oleh JavaScript di sini -->
+    </div>
+
+    <script>
+        // Data Soal
+        const quizData = [
+            {
+                q: 'بِنَاءً عَلَى النَّصِ السَّابِقِ، مَا هُوَ السَّبَبُ الرَّئِيْسُ فِي اخْتِيَارِ "هِجْرَةِ النَّبِيِّ" كَبِدَايَةِ لِلتَّقْوِيْمِ الْهِجْرِيِّ؟',
+                opts: {
+                    A: 'لِأَنَّهَا عَامُ وِلَادَةِ النَّبِيِّ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ فِي مَكَّةَ',
+                    B: 'لِأَنَّهَا كَانَتْ حِفْظًا لِلدِّينِ وَالنَّفْسِ وَتَأْسِيسًا لِمُجْتَمَعٍ إِسْلَامِيٍّ جَدِيدٍ',
+                    C: 'لِأَنَّهَا عَامُ وَفَاةِ خُلَفَاءِ الرَّاشِدِينَ',
+                    D: 'لِأَنَّهَا وَقَعَتْ فِي شَهْرِ رَمَضَانَ الْمُبَارَكِ فَقَطْ'
+                },
+                ans: 'B',
+                bahas: 'Berdasarkan teks bacaan, hijrah dipilih karena selain menjadi titik balik keselamatan agama dan jiwa dari gangguan kaum musyrikin, juga menjadi tonggak awal peradaban Islam.'
+            },
+            {
+                q: 'مَنْ هُوَ الصَّحَابِيُّ الَّذِي قَادَ مُشَاوَرَةَ وَضْعِ التَّقْوِيْمِ الْهِجْرِيِّ حَسَبَ النَّصِّ؟',
+                opts: { A: 'أَبُو بَكْرِ الصِّدِّيقِ رَضِيَ اللَّهُ عَنْهُ', B: 'عُمَرُ بْنُ الْخَطَّابِ رَضِيَ اللَّهُ عَنْهُ', C: 'عُثْمَانُ بْنُ عَفَّانَ رَضِيَ اللَّهُ عَنْهُ', D: 'عَلِيُّ بْنُ أَبِي طَالِبٍ رَضِيَ اللَّهُ عَنْهُ' },
+                ans: 'B', bahas: 'Teks dengan jelas menyebutkan masa kekhalifahan "الْخَلِيفَةِ الرَّاشِدِيِّ عُمَرَ بْنِ الْخَطَّابِ".'
+            },
+            {
+                q: 'كَمْ عَدَدُ الشُّهُورِ الْقَمَرِيَّةِ الْمَذْكُورَةِ فِي النَّصِّ؟',
+                opts: { A: 'عَشَرَةُ شُهُورٍ', B: 'أَحَدَ عَشَرَ شَهْرًا', C: 'اثْنَا عَشَرَ شَهْرًا', D: 'ثَلَاثُونَ شَهْرًا' },
+                ans: 'C', bahas: 'Teks menyatakan: "وَكَانَتِ الشُّهُورُ الْقَمَرِيَّةُ اثْنَيْ عَشَرَ شَهْرًا".'
+            },
+            {
+                q: 'اِسْتَخْرِجْ مِنْ النَّصِ الكَلِمَةَ الَّتِي تَدُلُّ عَلَى اسْمِ فِعْلٍ نَاسِخٍ (أَخَوَاتِ كَانَ):',
+                opts: { A: 'جَاءَ', B: 'أَصْبَحَ', C: 'يَسْتَخْدِمُونَ', D: 'يُشَاوِرُ' },
+                ans: 'B', bahas: 'Kata أَصْبَحَ adalah bagian dari kelompok kana wa akhawatuha yang terdapat di dalam teks.'
+            },
+            {
+                q: 'فِي جُمْلَةِ: "وَظَلَّ الْمُسْلِمُونَ يَعْتَمِدُونَ عَلَى هَذَا التَّقْوِيْمِ"، مَا هُوَ إِعْرَابُ كَلِمَةِ "الْمُسْلِمُونَ"؟',
+                opts: { A: 'اسْمُ ظَلَّ مَرْفُوعٌ بِالْوَاوِ لِأَنَّهُ جَمْعُ مُذَكَّرٍ سَالِمٌ', B: 'خَبَرُ ظَلَّ مَنْصُوبٌ بِالْيَاءِ', C: 'مُبْتَدَأٌ مَرْفُوعٌ بِالضَّمَّةِ', D: 'مَفْعُولٌ بِهِ مَنْصُوبٌ' },
+                ans: 'A', bahas: 'Kata al-muslimuna berkedudukan sebagai isim dari fi\'il nasikh zhalla, sehingga marfu\' dengan tanda huruf wawu.'
+            },
+            {
+                q: 'مَا هُوَ الشَّهْرُ الْأَوَّلُ فِي السَّنَةِ الْهِجْرِيَّةِ حَسَبَ مَا وَرَدَ فِي النَّصِ؟',
+                opts: { A: 'شَهْرُ صَفَرٍ', B: 'شَهْرُ رَبِيعِ الْأَوَّلِ', C: 'شَهْرُ مُحَرَّمٍ', D: 'شَهْرُ رَمَضَانَ' },
+                ans: 'C', bahas: 'Di dalam teks tertulis: "تَبْدَأُ بِشَهْرِ مُحَرَّمٍ".'
+            },
+            {
+                q: 'مَا هُوَ الشَّهْرُ الْأَخِيرُ فِي السَّنَةِ الْهِجْرِيَّةِ طِبْقًا لِلنَّصِ؟',
+                opts: { A: 'شَهْرُ رَجَبٍ', B: 'شَهْرُ ذِي الْحِجَّةِ', C: 'شَهْرُ شَوَّالٍ', D: 'شَهْرُ شَعْبَانَ' },
+                ans: 'B', bahas: 'Teks menyebutkan: "وَتَنْتَهِي بِشَهْرِ ذِي الْحِجَّةِ".'
+            },
+            {
+                q: 'حَوِّلِ الْجُمْلَةَ الآتِيَةَ مِنَ النَّصِ إِلَى الْمُؤَنَّثِ الْمُفْرَدِ: "كَانَ الْمُسْلِمُ مُجْتَهِدًا فِي عِبَادَتِهِ"',
+                opts: { A: 'كَانَتِ الْمُسْلِمَةُ مُجْتَهِدَةً فِي عِبَادَتِهَا', B: 'كَانَ الْمُسْلِمَةُ مُجْتَهِدٌ فِي عِبَادَتِهَا', C: 'كَانَتِ الْمُسْلِمُونَ مُجْتَهِدَاتٍ', D: 'كَانَ الْمُسْلِمَانِ مُجْتَهِدَيْنِ' },
+                ans: 'A', bahas: 'Perubahan bentuk kata kerja kanat dan penambahan ta\' marbutoh pada isim serta khabarnya untuk mufrad muannats.'
+            },
+            {
+                q: 'تَرْجَمَةُ الْجُمْلَةِ الْأَخِيرَةِ مِنَ النَّصِ ("وَظَلَّ الْمُسْلِمُونَ يَعْتَمِدُونَ عَلَى هَذَا التَّقْوِيْمِ") هِيَ:',
+                opts: { A: 'Dan kaum Muslimin tetap bergantung pada kalender ini dalam semua urusan agama dan waktu mereka.', B: 'Dan kaum Muslimin mulai meninggalkan kalender Masehi.', C: 'Umar bin Khattab membuat kalender baru.', D: 'Kalender Hijriah dimulai dari Makkah.' },
+                ans: 'A', bahas: 'Terjemahan tersebut sangat akurat merujuk kalimat akhir pada teks.'
+            },
+            {
+                q: 'فِي عِبَارَةِ: "أَصْبَحَ عُمَرُ يُشَاوِرُ الصَّحَابَةَ"، مَا نَوْعُ الخَبَرِ لِـ "أَصْبَحَ"؟',
+                opts: { A: 'خَبَرٌ مُفْرَدٌ', B: 'خَبَرٌ جُمْلَةٌ فِعْلِيَّةٌ (يُشَاوِرُ)', C: 'خَبَرٌ شِبْهُ جُمْلَةٍ', D: 'خَبَرٌ جُمْلَةٌ اسْمِيَّةٌ' },
+                ans: 'B', bahas: 'Khabar dari asbaha berupa kata kerja (fi\'il mudhari\' yusyawiru), sehingga dikategorikan sebagai khabar jumla fi\'liyah.'
+            },
+            {
+                q: 'مَنْ هُوَ الصَّحَابِيُّ أَوْ الشَّخْصُ الَّذِي يُذْكَرُ تَعْلِيقًا عَلَى بَدْءِ الْهِجْرَةِ فِي النَّصِّ؟',
+                opts: { A: 'عُمَرُ بْنُ الْخَطَّابِ', B: 'النَّبِيُّ مُحَمَّدٌ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ', C: 'أَبُو بَكْرِ الصِّدِّيقِ', D: 'عُثْمَانُ بْنُ عَفَّانَ' },
+                ans: 'B', bahas: 'Berdasarkan teks dan kisi-kisi, awal penanggalan Hijriah ditandai dengan hijrahnya Nabi Muhammad SAW dari Makkah ke Madinah.'
+            },
+            {
+                q: 'مَادَّةُ الحِوَارِ بَيْنَ مَحْمُودٍ وَأَحْمَدَ تَدُورُ حَوْلَ:',
+                opts: { A: 'أَعْيَادِ النَّصَارَى', B: 'التَّارِيخَيْنِ (الْهِجْرِيِّ وَالْمِيلَادِيِّ)', C: 'بِنَاءِ الْمَسْجِدِ النَّبَوِيِّ', D: 'صَلَاةِ الْعِيدَيْنِ' },
+                ans: 'B', bahas: 'Dalam hiwar disebutkan bahwa mereka membicarakan dua penanggalan (at-tarikh al-hijri wa al-tarikh al-miladi).'
+            },
+            {
+                q: 'تَرْجَمَةُ الْجُمْلَةِ الآتِيَةِ بَدَقَّةٍ: "عِنْدَنَا تَارِيخَانِ: التَّارِيخُ الْهِجْرِيُّ وَالتَّارِيخُ الْمِيلَادِيُّ"',
+                opts: { A: 'Kita mempunyai dua penanggalan: penanggalan Hijriah dan penanggalan Masehi.', B: 'Kita memiliki satu kalender Islam saja.', C: 'Tahun baru Hijriah jatuh pada tanggal 1 Muharram.', D: 'Nabi Muhammad hijrah ke Madinah.' },
+                ans: 'A', bahas: 'Sesuai persis dengan terjemahan pada lembar kisi-kisi materi hiwar.'
+            },
+            {
+                q: 'فِي جُمْلَةِ: "قَامَ رَئِيسُ الْجَلْسَةِ ... الْمُحَاضِرِينَ وَالْمُحَاضِرَاتِ", الْكَلِمَةُ الْمُنَاسِبَةُ لِلْمَكَانِ (ظَرْفُ الْمَكَانِ) هِيَ:',
+                opts: { A: 'أَمَامَ', B: 'وَرَاءَ', C: 'تَحْتَ', D: 'عَلَى' },
+                ans: 'A', bahas: 'Kata keterangan tempat yang tepat sesuai kisi-kisi adalah amama (di depan).'
+            },
+            {
+                q: 'اِسْتَخْرِجِ التَّشْرِيفَ الصَّحِيحَ لِفِعْلِ الْمَاضِي (كَانَ) مَعَ الضَّمِيرِ (أَنْتِ):',
+                opts: { A: 'كَانَا', B: 'كُنْتِ', C: 'كُنْتُمْ', D: 'كَانَتْ' },
+                ans: 'B', bahas: 'Perubahan fi\'il madhi kana untuk dhomir anti adalah kunti.'
+            },
+            {
+                q: 'أَكْمِلِ الْجُمْلَةَ الآتِيَةَ بِالْفِعْلِ الْمَاضِي النَّاسِخِ الْمُنَاسِبِ: "........ التِّلْمِيذَةُ نَشِيطَةً"',
+                opts: { A: 'كَانَ', B: 'كَانَتْ', C: 'كَانُوا', D: 'كُنْتُ' },
+                ans: 'B', bahas: 'Karena isimnya (at-tilmidzah) adalah muannats mufrad, maka fi\'il nasikh yang digunakan harus kanat.'
+            },
+            {
+                q: 'مَا مَعْنَى الْعِبَارَةِ الآتِيَةِ: "عِنْدَنَا أَعْيَادٌ إِسْلَامِيَّةٌ، مِثْلُ الرَّأْسِ السَّنَةِ الْهِجْرِيَّةِ"؟',
+                opts: { A: 'Kita mempunyai hari-hari raya Islam, seperti tahun baru Hijriah.', B: 'Kita merayakan hari kemerdekaan di bulan Muharram.', C: 'Hari raya Idul Adha disembelih setelah shalat.', D: 'Maulid Nabi Muhammad SAW diperingati setiap bulan Rajab.' },
+                ans: 'A', bahas: 'Arti harfiah yang cocok dengan materi ringkasan a\'yad islamiyah.'
+            },
+            {
+                q: 'التَّرْتِيبُ الصَّحِيحُ لِلشَّهْرِ الثَّامِنِ فِي التَّقْوِيمِ الْهِجْرِيِّ هُوَ:',
+                opts: { A: 'مُحَرَّمُ', B: 'رَمَضَانُ', C: 'شَعْبَانُ', D: 'رَجَبُ' },
+                ans: 'C', bahas: 'Bulan kedelapan dalam kalender Islam adalah bulan Sya\'ban, sesuai contoh di kisi-kisi.'
+            },
+            {
+                q: 'فِي جُمْلَةِ: "جَلَسَ التَّلَامِيذُ فِي الْفَصْلِ، هُمْ ....... دُرُوسَهُمْ"، الْفِعْلُ الْمَاضِي الْمُنَاسِبُ هُوَ:',
+                opts: { A: 'كَتَبَتْ', B: 'كَتَبُوا', C: 'كَتَبَا', D: 'كَتَبْتُ' },
+                ans: 'B', bahas: 'Dhomir pelaku adalah hum (mereka laki-laki), sehingga fi\'il madhinya berakhiran wawu jama\'ah yaitu katabu.'
+            },
+            {
+                q: 'أَيُّ الْكَلِمَاتِ الآتِيَةِ يُعَدُّ مِنْ أَخَوَاتِ (كَانَ) وَتَدُلُّ عَلَى وَقْتِ الصَّبَاحِ؟',
+                opts: { A: 'أَمْسَى', B: 'أَصْبَحَ', C: 'بَاتَ', D: 'صَارَ' },
+                ans: 'B', bahas: 'Asbaha adalah saudara kana yang bermakna menggambarkan waktu pagi hari.'
+            },
+            {
+                q: 'مَنْ هُوَ الشَّخْصُ الَّذِي كَانَ رَئِيسَ اللَّجْنَةِ فِي حَفْلِ مَوْلِدِ الرَّسُولِ حَسَبَ النَّصِّ؟',
+                opts: { A: 'حُسَيْنٌ', B: 'هِشَامٌ', C: 'عَلِيٌّ', D: 'صَالِحٌ' },
+                ans: 'A', bahas: 'Di dalam teks qira\'ah disebutkan bahwa Husain adalah ketua panitia (ra\'is al-lajnah).'
+            },
+            {
+                q: 'مَنْ كَانَ يَعْمَلُ رَئِيسَ الْجَلْسَةِ وَأَمِينَةَ الصُّنْدُوقِ فِي التَّنْظِيمِ؟',
+                opts: { A: 'حَسَنٌ وَحُسَيْنٌ', B: 'هِشَامٌ رَئِيسُ الْجَلْسَةِ، وَفَاطِمَةُ أَمِينَةُ الصُّنْدُوقِ', C: 'صَالِحٌ وَمَرْوَانُ', D: 'عَبْدُ الرَّحْمَانِ وَمُنِيرٌ' },
+                ans: 'B', bahas: 'Berdasarkan rincian teks, Hisyam menjabat sebagai ketua sidang dan Fatimah sebagai bendahara.'
+            },
+            {
+                q: 'مَاذَا يَفْعَلُ عَلِيٌّ وَحَسَنٌ فِي لَجْنَةِ الْحَفْلِ؟',
+                opts: { A: 'يُنَظِّمُونَ الْكَرَاسِيَّ', B: 'يُرْسِلُونَ بِطَاقَةَ الدَّعْوَةِ إِلَى الْمَدْعُوِّينَ', C: 'يُقَدِّمُونَ الْمُحَاضَرَةَ الدِّينِيَّةَ', D: 'يَقْرَؤُونَ الْقُرْآنَ الْكَرِيمَ' },
+                ans: 'B', bahas: 'Ali dan Hasan bertugas mengirimkan kartu undangan kepada para undangan.'
+            },
+            {
+                q: 'فِي تَرْتِيبِ بَرَامِجِ الْحَفْلِ، مَا هُوَ الْبَرْنَامَجُ الثَّانِي؟',
+                opts: { A: 'الِافْتِتَاحُ بِالْبَسْمَلَةِ', B: 'قِرَاءَةُ آيَاتِ الْقُرْآنِ الْكَرِيمِ', C: 'كَلِمَةُ رَئِيسِ الْمَدْرَسَةِ', D: 'الْمُحَاضَرَةُ الدِّينِيَّةُ' },
+                ans: 'B', bahas: 'Program atau acara kedua adalah pembacaan ayat-ayat suci Al-Qur\'an.'
+            },
+            {
+                q: 'مَنْ هُوَ المُحَاضِرُ الدِّينِيُّ الَّذِي جَاءَ مِنْ سُورَابَايَا فِي بَرْنَامَجِ الحَفْلِ؟',
+                opts: { A: 'الشَّيْخُ الْحَاجُّ عَبْدُ الرَّحْمَانِ', B: 'الشَّيْخُ عُمَرُ بْنُ خَطَّابٍ', C: 'الأُسْتَاذُ حَسَنٌ', D: 'رَئِيسُ اللَّجْنَةِ حُسَيْنٌ' },
+                ans: 'A', bahas: 'Ceramah agama disampaikan oleh Syekh Haji Abdul Rahman dari Surabaya.'
+            },
+            {
+                q: 'اِسْتَخْرِجِ الْفِعْلَ الْمُضَارِعَ المُنَاسِبَ لِلْفَاعِلِ فِي الْجُمْلَةِ الآتِيَةِ: "رَئِيسُ اللَّجْنَةِ ........ أَعْمَالَ عَلَى أَعْضَائِهَا"',
+                opts: { A: 'يُوَزِّعُ', B: 'يُنَظِّمُ', C: 'يَجْلِسُ', D: 'يَقْرَأُ' },
+                ans: 'A', bahas: 'Kata kerja (fi\'il mudhari\') yang tepat untuk ketua panitia membagikan tugas adalah yuwazzi\'u.'
+            },
+            {
+                q: 'تَرْجَمَةُ الْجُمْلَةِ الآتِيَةِ بَدَقَّةٍ: "يُنَظِّمُ صَالِحٌ وَمَرْوَانُ وَمُنِيرٌ الْكَرَاسِيَّ فِي مَكَانِ الْحَفْلِ"',
+                opts: { A: 'Sholih, Marwan, dan Munir menata kursi-kursi di tempat perayaan.', B: 'Sholih dan teman-temannya membaca Al-Qur\'an di aula.', C: 'Ketua panitia membagikan kartu undangan.', D: 'Para undangan duduk di kursi masing-masing.' },
+                ans: 'A', bahas: 'Sesuai persis dengan arti harfiah pada kisi-kisi aktivitas penataan kursi.'
+            },
+            {
+                q: 'أَيُّ الْجُمَلِ الآتِيَةِ تُعَدُّ جُمْلَةً صَحِيحَةً دَخَلَتْ عَلَيْهَا (كَانَ) وَأَخَوَاتُهَا بِمُقْتَضَى الْقَوَاعِدِ؟',
+                opts: { A: 'كَانَ الْبَيْتُ كَبِيرًا', B: 'كَانَ الْبَيْتُ كَبِيرٌ', C: 'كَانَ الْبَيْتَ كَبِيرًا', D: 'كَانَ الْبُيُوتُ كَبِيرَةٌ' },
+                ans: 'A', bahas: 'Isim kana marfu\' (al-baytu) dan khabarnya manshub (kabiran).'
+            },
+            {
+                q: 'فِي الجُمْلَةِ: "كُنْتِ طَالِبَةً مَاهِرَةً"، مَا إِعْرَابُ أَوْ حَالَةُ كَلِمَةِ "طَالِبَةً"؟',
+                opts: { A: 'مَرْفُوعَةٌ لِأَنَّهَا مُبْتَدَأٌ', B: 'مَنْصُوبَةٌ لِأَنَّهَا خَبَرُ (كَانَ/كُنْتِ)', C: 'مَجْرُورَةٌ بِالْكَسْرَةِ', D: 'فَاعِلٌ مَرْفُوعٌ' },
+                ans: 'B', bahas: 'Kata tholibatan berkedudukan sebagai khabar kunti sehingga berharakat fathah/manshub.'
+            },
+            {
+                q: 'مَا هُوَ خَبَرُ (كَانَ) فِي الْجُمْلَةِ الآتِيَةِ: "كَانَ فَوْزَانُ طَالِبًا فِي الْمَدْرَسَةِ الِابْتِدَائِيَّةِ"؟',
+                opts: { A: 'فَوْزَانُ', B: 'طَالِبًا', C: 'فِي الْمَدْرَسَةِ', D: 'الِابْتِدَائِيَّةِ' },
+                ans: 'B', bahas: 'Kata tholiban adalah khabar dari kana yang melengkapi makna kalimat tersebut.'
+            },
+            {
+                q: 'مَا مَعْنَى فِعْلِ النَّسْخِ (أَمْسَى) مِنْ أَخَوَاتِ (كَانَ)؟',
+                opts: { A: 'بَدَأَ فِي وَقْتِ الصَّبَاحِ', B: 'يَدُلُّ عَلَى وَقْتِ الْمَسَاءِ (الْعَشِيِّ)', C: 'يَدُلُّ عَلَى الِاسْتِمْرَارِ', D: 'يَدُلُّ عَلَى النَّفْيِ' },
+                ans: 'B', bahas: 'Amsa bermakna menggambarkan waktu sore/petang hari (waktu al-masa\').'
+            },
+            {
+                q: 'مَا مَعْنَى فِعْلِ النَّسْخِ (صَارَ) فِي الْقَوَاعِدِ العَرَبِيَّةِ؟',
+                opts: { A: 'لَيْسَ', B: 'أَصْبَحَ', C: 'تَحَوَّلَ أَوْ صَارَ (Menjadi)', D: 'مَا زَالَ' },
+                ans: 'C', bahas: 'Shara memiliki arti dasar "menjadi" (perubahan kondisi).'
+            },
+            {
+                q: 'فِي التَّارِيخِ الْإِسْلَامِيِّ، مَتَى كَانَتْ ذِكْرَى نُزُولِ الْقُرْآنِ؟',
+                opts: { A: 'فِي التَّارِيخِ 12 رَبِيعِ الْأَوَّلِ', B: 'فِي التَّارِيخِ 17 رَمَضَانَ', C: 'فِي التَّارِيخِ 27 رَجَبٍ', D: 'فِي التَّارِيخِ 1 شَوَّالٍ' },
+                ans: 'B', bahas: 'Nuzulul Qur\'an diperingati pada tanggal 17 Ramadan.'
+            },
+            {
+                q: 'مَتَى تَكُونُ لَيْلَةُ إِسْرَاءِ الرَّسُولِ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ وَمِعْرَاجُهُ؟',
+                opts: { A: 'فِي التَّارِيخِ 27 رَجَبٍ', B: 'فِي التَّارِيخِ 1 مُحَرَّمٍ', C: 'فِي التَّارِيخِ 10 ذِي الْحِجَّةِ', D: 'فِي التَّارِيخِ 1 شَوَّالٍ' },
+                ans: 'A', bahas: 'Isra\' Mikraj terjadi pada tanggal 27 Rajab.'
+            },
+            {
+                q: 'كَيْفَ نُعَبِّرُ عَنْ تَقْدِيمِ أُضْحِيَّةِ الْعِيدِ فِي شَرْعِ الإِسْلَامِ؟',
+                opts: { A: 'نَذْبَحُ الْأُضْحِيَّةَ بَعْدَ صَلَاةِ عِيدِ الْأَضْحَى', B: 'نَذْبَحُهَا قَبْلَ صَلَاةِ الْعِيدِ بِأَيَّامٍ', C: 'نُوَزِّعُ الْكَرَاسِيَّ فِي مَكَانِ الْحَفْلِ', D: 'نَصُومُ شَهْرَ شَعْبَانَ كَامِلًا' },
+                ans: 'A', bahas: 'Ketentuan penyembelihan hewan kurban dilakukan setelah shalat Idul Adha.'
+            },
+            {
+                q: 'فِي جُمْلَةِ: "أَنْتُمْ احْتَفَلْتُمْ سَنَةً هِجْرِيَّةً فِي الْأُسْبُوعِ الْمَاضِي"، مَا مَعْنَى كَلِمَةِ "احْتَفَلْتُمْ"؟',
+                opts: { A: 'Kalian merayakan', B: 'Kalian menulis', C: 'Kalian pergi', D: 'Kalian duduk' },
+                ans: 'A', bahas: 'Kata ihtafaltum berarti "kalian telah merayakan" (dhomir antum).'
+            },
+            {
+                q: 'مَا هُوَ التَّرْتِيبُ الصَّحِيحُ لِلتَّشْرِيفِ لِلْفِعْلِ المَاضِي (ذَهَبَ) مَعَ ضَمِيرِ (نَحْنُ)؟',
+                opts: { A: 'ذَهَبْتُ', B: 'ذَهَبْتُمْ', C: 'ذَهَبْنَا', D: 'ذَهَبَا' },
+                ans: 'C', bahas: 'Fi\'il madhi untuk dhomir nahnu berakhiran na panjang (dzahabna).'
+            },
+            {
+                q: 'عِبَارَةُ "رَئِيسُ لَجْنَةِ الْحَفْلِ" تَعْنِي فِي اللُّغَةِ الإِنْدُونِيسِيَّةِ:',
+                opts: { A: 'Kepala sekolah', B: 'Ketua panitia perayaan', C: 'Pemimpin sidang', D: 'Bendahara acara' },
+                ans: 'B', bahas: 'Terjemahan yang tepat untuk ra\'is lajnatil hafl adalah ketua panitia perayaan.'
+            },
+            {
+                q: 'أَيُّ الْأَفْعَالِ الْآتِيَةِ يُعَدُّ مِنْ (أَخَوَاتِ كَانَ) الَّتِي تَدُلُّ عَلَى معنى الدُّحَى (الوقت الضُّحَى)؟',
+                opts: { A: 'أَصْبَحَ', B: 'أَضْحَى', C: 'بَاتَ', D: 'مَادَامَ' },
+                ans: 'B', bahas: 'Adhha adalah fi\'il nasikh yang khusus menggambarkan waktu dhuha.'
+            },
+            {
+                q: 'فِي التَّقْوِيمِ الإِسْلَامِيِّ، فِي أَيِّ تَارِيخٍ يَقَعُ عِيدُ الْفِطْرِ الْمُبَارَكُ؟',
+                opts: { A: 'فِي التَّارِيخِ الأَوَّلِ مِنْ شَهْرِ شَوَّالٍ', B: 'فِي التَّارِيخِ 10 مِنْ ذِي الْحِجَّةِ', C: 'فِي التَّارِيخِ 12 رَبِيعِ الْأَوَّلِ', D: 'فِي التَّارِيخِ 1 رَمَضَانَ' },
+                ans: 'A', bahas: 'Hari raya Idul Fitri jatuh pada tanggal 1 Syawal.'
+            }
+        ];
+
+        // Web Audio API Setup
+        let audioCtx;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                // Suara Benar (Ting!)
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1); // C6
+                
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } else {
+                // Suara Salah (Buzzer/Tet!)
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                
+                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+                
+                // Getaran untuk HP (jika didukung)
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200]);
+                }
+            }
+        }
+
+        // Render UI
+        const container = document.getElementById('quiz-container');
+
+        quizData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `card-${index}`;
+            
+            const num = index + 1;
+            
+            // Cek apakah ada teks non-arab untuk menyesuaikan class (opsional, tapi diset arabic default)
+            let qHtml = `<div class="indo-text"><strong>Soal ${num}:</strong></div>
+                         <div class="arabic-text">${item.q}</div>`;
+            
+            let optionsHtml = '<div class="options">';
+            for (const [key, value] of Object.entries(item.opts)) {
+                optionsHtml += `<div class="option" onclick="checkAnswer(${index}, '${key}', this)">
+                                    ${key}. ${value}
+                                </div>`;
+            }
+            optionsHtml += '</div>';
+            
+            let bahasHtml = `<div class="pembahasan" id="bahas-${index}">
+                                <strong>Pembahasan:</strong> ${item.bahas}
+                             </div>`;
+            
+            card.innerHTML = qHtml + optionsHtml + bahasHtml;
+            container.appendChild(card);
+        });
+
+        // Logika Pengecekan Jawaban
+        function checkAnswer(qIndex, selectedOpt, element) {
+            // Cek jika sudah dijawab
+            if (element.parentNode.classList.contains('answered')) return;
+            
+            const correctAnswer = quizData[qIndex].ans;
+            const options = element.parentNode.children;
+            
+            // Tandai sudah dijawab
+            element.parentNode.classList.add('answered');
+            
+            // Matikan semua tombol
+            for (let opt of options) {
+                opt.classList.add('disabled');
+            }
+
+            if (selectedOpt === correctAnswer) {
+                // Jawaban Benar
+                element.classList.add('correct');
+                element.classList.remove('disabled');
+                playSound('correct');
+            } else {
+                // Jawaban Salah
+                element.classList.add('wrong');
+                element.classList.remove('disabled');
+                
+                // Animasi getar CSS
+                const card = document.getElementById(`card-${qIndex}`);
+                card.classList.add('shake-effect');
+                setTimeout(() => card.classList.remove('shake-effect'), 400);
+                
+                playSound('wrong');
+                
+                // Tampilkan yang benar juga
+                for (let opt of options) {
+                    if (opt.innerText.trim().startsWith(correctAnswer)) {
+                        opt.classList.add('correct');
+                    }
+                }
+            }
+
+            // Tampilkan pembahasan dengan animasi turun
+            document.getElementById(`bahas-${qIndex}`).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
