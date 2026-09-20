@@ -574,24 +574,17 @@
         // SISTEM RIWAYAT LATIHAN & TUGAS SELESAI
         // ==========================================
 
-        // 1. Inisialisasi Data (Simulasi)
+        // 1. Inisialisasi Data (Reset ulang setiap kali halaman dimuat / refresh / pengguna baru)
         function initData() {
-            let riwayat = localStorage.getItem('riwayat_latihan');
-            
-            // Jika belum ada data sama sekali di browser, kita buatkan data contoh 
-            // agar bisa melihat tampilannya secara langsung.
-            if (!riwayat) {
-                let dataContoh = ["Ilmu Pengetahuan Sosial", "Bahasa Arab"];
-                localStorage.setItem('riwayat_latihan', JSON.stringify(dataContoh));
-            }
+            // Perintah ini akan menghapus semua riwayat saat halaman dimuat
+            // Sehingga secara otomatis tugas selesai akan kembali ke 0
+            localStorage.removeItem('riwayat_latihan');
         }
 
         // 2. Fungsi Update Angka "Tugas Selesai" di Dashboard
         function updateTugasSelesai() {
-            // Ambil data dari localStorage
+            // Karena data sudah dihapus di initData(), array akan selalu kosong (0) pada saat di-refresh
             let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
-            
-            // Ubah teks h2 di kartu tugas selesai sesuai jumlah array
             document.getElementById('tugas-selesai-count').innerText = riwayat.length + " / 13";
         }
 
@@ -604,7 +597,6 @@
                 htmlList = "<p style='color: #6b7280; font-size: 0.95rem;'>Belum ada latihan yang diselesaikan.</p>";
             } else {
                 htmlList = "<ul style='text-align: left; font-size: 0.95rem; line-height: 2; color: #333; padding-left: 10px; list-style: none;'>";
-                // Lakukan perulangan untuk setiap pelajaran yang ada di riwayat
                 riwayat.forEach(item => {
                     htmlList += `<li style="border-bottom: 1px solid #e5e7eb; padding: 5px 0;">
                                     <i class="fa-solid fa-circle-check" style="color: #10b981; margin-right: 8px;"></i> 
@@ -617,7 +609,7 @@
             Swal.fire({
                 title: 'Riwayat Latihan Anda',
                 html: htmlList,
-                icon: 'success',
+                icon: riwayat.length === 0 ? 'info' : 'success',
                 confirmButtonText: 'Tutup',
                 confirmButtonColor: '#2563eb',
                 background: '#ffffff',
