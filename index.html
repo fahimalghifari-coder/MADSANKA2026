@@ -370,7 +370,7 @@
                     <div class="module-body">
                         <h3>Bahasa Indonesia</h3>
                         <p>Latihan soal tata bahasa, teks bacaan, dan kesusastraan.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Bahasa Indonesia')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -383,7 +383,7 @@
                     <div class="module-body">
                         <h3>Matematika</h3>
                         <p>Latihan soal aljabar, geometri, dan perhitungan dasar.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Matematika')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -396,7 +396,7 @@
                     <div class="module-body">
                         <h3>Ilmu Pengetahuan Alam</h3>
                         <p>Fisika, Biologi, dan fenomena alam sekitar.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Ilmu Pengetahuan Alam')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -409,7 +409,7 @@
                     <div class="module-body">
                         <h3>Ilmu Pengetahuan Sosial</h3>
                         <p>Sejarah, geografi, dan ekonomi dasar.</p>
-                        <button class="module-btn" onclick="openModul('ips.html')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('ips.html', 'Ilmu Pengetahuan Sosial')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -422,7 +422,7 @@
                     <div class="module-body">
                         <h3>Pancasila</h3>
                         <p>Pendidikan moral, konstitusi, dan kewarganegaraan.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Pancasila')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -435,7 +435,7 @@
                     <div class="module-body">
                         <h3>Seni Rupa</h3>
                         <p>Latihan seputar kesenian, menggambar, dan apresiasi seni.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Seni Rupa')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -448,7 +448,7 @@
                     <div class="module-body">
                         <h3>Informatika</h3>
                         <p>Dasar komputer, algoritma, dan teknologi informasi.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Informatika')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -461,7 +461,7 @@
                     <div class="module-body">
                         <h3>PJOK</h3>
                         <p>Pendidikan Jasmani, Olahraga, dan Kesehatan tubuh.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'PJOK')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -474,7 +474,7 @@
                     <div class="module-body">
                         <h3>Bahasa Inggris</h3>
                         <p>Grammar, vocabulary, reading, dan listening exercises.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Bahasa Inggris')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -487,7 +487,7 @@
                     <div class="module-body">
                         <h3>Bahasa Arab</h3>
                         <p>Mufrodat, nahwu sharaf dasar, dan percakapan.</p>
-                        <button class="module-btn" onclick="openModul('arab.html')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('arab.html', 'Bahasa Arab')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -500,7 +500,7 @@
                     <div class="module-body">
                         <h3>Bahasa Jawa</h3>
                         <p>Aksara Jawa, unggah-ungguh basa, dan paramasastra.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Bahasa Jawa')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -513,7 +513,7 @@
                     <div class="module-body">
                         <h3>Fiqih</h3>
                         <p>Hukum Islam, ibadah, dan muamalah sehari-hari.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Fiqih')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -540,7 +540,7 @@
         // SISTEM NAVIGASI & PENCATATAN RIWAYAT
         // ==========================================
         
-        function openModul(link) {
+        function openModul(link, namaMapel) {
             if (link === 'comingsoon' || link === '' || link === '#') {
                 Swal.fire({
                     title: 'Coming Soon!',
@@ -555,6 +555,14 @@
                     }
                 });
             } else {
+                // Catat riwayat saat di klik
+                let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+                if (!riwayat.includes(namaMapel)) {
+                    riwayat.push(namaMapel);
+                    localStorage.setItem('riwayat_latihan', JSON.stringify(riwayat));
+                }
+                
+                // Setelah riwayat dicatat, pindah ke halaman
                 window.location.href = link; 
             }
         }
@@ -597,12 +605,20 @@
             });
         }
 
-        // Jalankan perintah ini saat halaman (Dashboard) dimuat
+        // ==========================================
+        // LOGIKA RESET KETIKA BARU DIBUKA (Session Flag)
+        // ==========================================
         window.onload = function() {
-            // MENGHAPUS SELURUH RIWAYAT SECARA TOTAL SETIAP KALI HALAMAN DIBUKA/RELOAD
-            localStorage.removeItem('riwayat_latihan');
+            // Cek apakah tab ini baru dibuka
+            if (!sessionStorage.getItem('sesi_aktif')) {
+                // Jika baru pertama kali buka web di tab ini, hapus riwayat hingga 0
+                localStorage.removeItem('riwayat_latihan');
+                
+                // Beri tanda bahwa sesi sedang berjalan, jadi kalo di-back riwayat ga akan kehapus lagi
+                sessionStorage.setItem('sesi_aktif', 'true');
+            }
             
-            // Perbarui tampilan tugas selesai agar menjadi 0 / 12
+            // Perbarui tampilan tugas selesai di angka yang benar
             updateTugasSelesai();
         };
     </script>
