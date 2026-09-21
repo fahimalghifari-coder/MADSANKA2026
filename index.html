@@ -571,7 +571,7 @@
                     }
                 });
             } else {
-                // Catat riwayat saat di klik
+                // Catat riwayat saat di klik sebelum halaman dipindahkan
                 let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
                 if (!riwayat.includes(namaMapel)) {
                     riwayat.push(namaMapel);
@@ -625,19 +625,13 @@
         }
 
         // ==========================================
-        // LOGIKA RESET KETIKA BARU DIBUKA (Session Flag)
+        // LOGIKA RESET MUTLAK KETIKA HALAMAN DIMUAT
         // ==========================================
         window.onload = function() {
-            // Cek apakah tab ini baru dibuka
-            if (!sessionStorage.getItem('sesi_aktif')) {
-                // Jika baru pertama kali buka web di tab ini, hapus riwayat hingga 0
-                localStorage.removeItem('riwayat_latihan');
-                
-                // Beri tanda bahwa sesi sedang berjalan, jadi kalo di-back riwayat ga akan kehapus lagi
-                sessionStorage.setItem('sesi_aktif', 'true');
-            }
+            // MENGHAPUS SELURUH RIWAYAT SECARA TOTAL SETIAP KALI HALAMAN DIBUKA/RELOAD
+            localStorage.removeItem('riwayat_latihan');
             
-            // Perbarui tampilan tugas selesai di angka yang benar
+            // Perbarui tampilan tugas selesai agar menjadi 0 / 12
             updateTugasSelesai();
         };
     </script>
