@@ -351,6 +351,7 @@
                     <i class="fa-solid fa-check-circle" style="color: #10b981; background: #d1fae5;"></i>
                     <div>
                         <h4 style="color: #6b7280; font-size: 0.85rem;">Tugas Selesai</h4>
+                        <!-- ID ditambahkan di sini agar bisa diubah otomatis oleh JavaScript -->
                         <h2 id="tugas-selesai-count">0 / 13</h2>
                     </div>
                 </div>
@@ -370,7 +371,7 @@
                     <div class="module-body">
                         <h3>Bahasa Indonesia</h3>
                         <p>Latihan soal tata bahasa, teks bacaan, dan kesusastraan.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Bahasa Indonesia')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -383,7 +384,7 @@
                     <div class="module-body">
                         <h3>Matematika</h3>
                         <p>Latihan soal aljabar, geometri, dan perhitungan dasar.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Matematika')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -396,7 +397,7 @@
                     <div class="module-body">
                         <h3>Ilmu Pengetahuan Alam</h3>
                         <p>Fisika, Biologi, dan fenomena alam sekitar.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Ilmu Pengetahuan Alam')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -409,7 +410,7 @@
                     <div class="module-body">
                         <h3>Ilmu Pengetahuan Sosial</h3>
                         <p>Sejarah, geografi, dan ekonomi dasar.</p>
-                        <button class="module-btn" onclick="openModul('ips.html')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('ips.html', 'Ilmu Pengetahuan Sosial')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -422,7 +423,7 @@
                     <div class="module-body">
                         <h3>Pancasila</h3>
                         <p>Pendidikan moral, konstitusi, dan kewarganegaraan.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Pancasila')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -435,7 +436,7 @@
                     <div class="module-body">
                         <h3>Seni Rupa</h3>
                         <p>Latihan seputar kesenian, menggambar, dan apresiasi seni.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Seni Rupa')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -448,7 +449,7 @@
                     <div class="module-body">
                         <h3>Informatika</h3>
                         <p>Dasar komputer, algoritma, dan teknologi informasi.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Informatika')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -461,7 +462,7 @@
                     <div class="module-body">
                         <h3>PJOK</h3>
                         <p>Pendidikan Jasmani, Olahraga, dan Kesehatan tubuh.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'PJOK')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -474,7 +475,7 @@
                     <div class="module-body">
                         <h3>Bahasa Inggris</h3>
                         <p>Grammar, vocabulary, reading, dan listening exercises.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Bahasa Inggris')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -487,7 +488,7 @@
                     <div class="module-body">
                         <h3>Bahasa Arab</h3>
                         <p>Mufrodat, nahwu sharaf dasar, dan percakapan.</p>
-                        <button class="module-btn" onclick="openModul('arab.html')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('arab.html', 'Bahasa Arab')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -500,7 +501,7 @@
                     <div class="module-body">
                         <h3>Bahasa Jawa</h3>
                         <p>Aksara Jawa, unggah-ungguh basa, dan paramasastra.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Bahasa Jawa')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -513,7 +514,8 @@
                     <div class="module-body">
                         <h3>Sejarah Kebudayaan Islam</h3>
                         <p>Perkembangan sejarah dan peradaban dalam Islam.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <!-- Karena file ski.html dihapus, tombol ini diarahkan ke comingsoon sementara -->
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Sejarah Kebudayaan Islam')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -526,7 +528,7 @@
                     <div class="module-body">
                         <h3>Fiqih</h3>
                         <p>Hukum Islam, ibadah, dan muamalah sehari-hari.</p>
-                        <button class="module-btn" onclick="openModul('comingsoon')">Buka Modul &rarr;</button>
+                        <button class="module-btn" onclick="openModul('comingsoon', 'Fiqih')">Buka Modul &rarr;</button>
                     </div>
                 </div>
 
@@ -549,8 +551,12 @@
             document.getElementById('sidebar').classList.toggle('show');
         }
 
-        // Fungsi klik tombol buka modul
-        function openModul(link) {
+        // ==========================================
+        // SISTEM NAVIGASI & PENCATATAN RIWAYAT
+        // ==========================================
+        
+        // Modifikasi fungsi klik tombol untuk menerima nama pelajaran
+        function openModul(link, namaPelajaran) {
             if (link === 'comingsoon' || link === '' || link === '#') {
                 Swal.fire({
                     title: 'Coming Soon!',
@@ -565,6 +571,15 @@
                     }
                 });
             } else {
+                // Saat tombol diklik, masukkan ke localStorage DULU sebelum berpindah halaman
+                let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+                
+                if (!riwayat.includes(namaPelajaran)) {
+                    riwayat.push(namaPelajaran);
+                    localStorage.setItem('riwayat_latihan', JSON.stringify(riwayat));
+                }
+                
+                // Setelah riwayat tercatat, arahkan ke halaman soal
                 window.location.href = link; 
             }
         }
@@ -581,7 +596,7 @@
             let htmlList = "";
 
             if (riwayat.length === 0) {
-                htmlList = "<p style='color: #6b7280; font-size: 0.95rem;'>Belum ada latihan yang diselesaikan.</p>";
+                htmlList = "<p style='color: #6b7280; font-size: 0.95rem;'>Belum ada pelajaran yang diklik atau dipelajari. Buka salah satu modul untuk menampilkannya di sini.</p>";
             } else {
                 htmlList = "<ul style='text-align: left; font-size: 0.95rem; line-height: 2; color: #333; padding-left: 10px; list-style: none;'>";
                 riwayat.forEach(item => {
@@ -607,7 +622,7 @@
             });
         }
 
-        // Jalankan update angka saat halaman pertama kali dimuat
+        // Jalankan update angka saat halaman (Dashboard) dimuat
         window.onload = function() {
             updateTugasSelesai();
         };
