@@ -543,9 +543,7 @@
             let sidebar = document.getElementById('sidebar');
             let menuBtn = document.querySelector('.menu-toggle');
             
-            // Jika sidebar dalam mode terbuka (punya class 'show')
             if (sidebar.classList.contains('show')) {
-                // Dan area yang diklik BUKAN bagian dari sidebar ATAU tombol menu
                 if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
                     sidebar.classList.remove('show');
                 }
@@ -571,14 +569,8 @@
                     }
                 });
             } else {
-                // Catat riwayat saat di klik sebelum halaman dipindahkan
-                let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
-                if (!riwayat.includes(namaMapel)) {
-                    riwayat.push(namaMapel);
-                    localStorage.setItem('riwayat_latihan', JSON.stringify(riwayat));
-                }
-                
-                // Setelah riwayat dicatat, pindah ke halaman
+                // Gunakan sessionStorage sementara untuk membawa data mapel yang baru diklik
+                sessionStorage.setItem('mapel_terakhir', namaMapel);
                 window.location.href = link; 
             }
         }
@@ -620,18 +612,40 @@
                 }
             });
             
-            // Tutup sidebar otomatis jika terbuka saat layar mobile
             document.getElementById('sidebar').classList.remove('show');
         }
 
         // ==========================================
-        // LOGIKA RESET MUTLAK KETIKA HALAMAN DIMUAT
+        // LOGIKA PENDETEKSIAN MASUK / RELOAD & KEMBALI
         // ==========================================
         window.onload = function() {
-            // MENGHAPUS SELURUH RIWAYAT SECARA TOTAL SETIAP KALI HALAMAN DIBUKA/RELOAD
-            localStorage.removeItem('riwayat_latihan');
+            // Cek apakah halaman ini baru di-reload/dibuka murni (menggunakan Navigation API / performance timing)
+            let perfEntries = performance.getEntriesByType("navigation");
+            let isReloaded = false;
             
-            // Perbarui tampilan tugas selesai agar menjadi 0 / 12
+            if (perfEntries.length > 0) {
+                isReloaded = (perfEntries[0].type === "reload");
+            } else {
+                isReloaded = (window.performance && window.performance.navigation.type === 1);
+            }
+
+            if (isReloaded) {
+                // Jika halaman di-reload, bersihkan total riwayat ke 0
+                localStorage.removeItem('riwayat_latihan');
+            } else {
+                // Jika bukan karena reload (artinya baru masuk atau kembali dari halaman mapel)
+                let mapelBaru = sessionStorage.getItem('mapel_terakhir');
+                if (mapelBaru) {
+                    let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
+                    if (!riwayat.includes(mapelBaru)) {
+                        riwayat.push(mapelBaru);
+                        localStorage.setItem('riwayat_latihan', JSON.stringify(riwayat));
+                    }
+                    // Hapus setelah dicatat agar tidak berulang
+                    sessionStorage.removeItem('mapel_terakhir');
+                }
+            }
+
             updateTugasSelesai();
         };
     </script>
