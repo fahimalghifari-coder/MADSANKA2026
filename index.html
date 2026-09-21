@@ -537,6 +537,22 @@
         }
 
         // ==========================================
+        // LOGIKA KLIK DI LUAR SIDEBAR UNTUK MENUTUP
+        // ==========================================
+        document.addEventListener('click', function(event) {
+            let sidebar = document.getElementById('sidebar');
+            let menuBtn = document.querySelector('.menu-toggle');
+            
+            // Jika sidebar dalam mode terbuka (punya class 'show')
+            if (sidebar.classList.contains('show')) {
+                // Dan area yang diklik BUKAN bagian dari sidebar ATAU tombol menu
+                if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+
+        // ==========================================
         // SISTEM NAVIGASI & PENCATATAN RIWAYAT
         // ==========================================
         
@@ -603,6 +619,9 @@
                     popup: 'poppins-font'
                 }
             });
+            
+            // Tutup sidebar otomatis jika terbuka saat layar mobile
+            document.getElementById('sidebar').classList.remove('show');
         }
 
         // ==========================================
