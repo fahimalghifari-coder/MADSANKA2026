@@ -344,7 +344,7 @@
                     <i class="fa-solid fa-book-open"></i>
                     <div>
                         <h4 style="color: #6b7280; font-size: 0.85rem;">Total Pelajaran</h4>
-                        <h2>13 Modul</h2>
+                        <h2>12 Modul</h2> <!-- Ubah dari 13 ke 12 karena SKI dihapus -->
                     </div>
                 </div>
                 <div class="summary-card">
@@ -352,7 +352,7 @@
                     <div>
                         <h4 style="color: #6b7280; font-size: 0.85rem;">Tugas Selesai</h4>
                         <!-- ID ditambahkan di sini agar bisa diubah otomatis oleh JavaScript -->
-                        <h2 id="tugas-selesai-count">0 / 13</h2>
+                        <h2 id="tugas-selesai-count">0 / 12</h2> 
                     </div>
                 </div>
             </div>
@@ -505,21 +505,7 @@
                     </div>
                 </div>
 
-                <!-- 12. SKI -->
-                <div class="module-card card-brown">
-                    <div class="module-header">
-                        <div class="module-icon"><i class="fa-solid fa-mosque"></i></div>
-                        <div class="module-tag">Agama</div>
-                    </div>
-                    <div class="module-body">
-                        <h3>Sejarah Kebudayaan Islam</h3>
-                        <p>Perkembangan sejarah dan peradaban dalam Islam.</p>
-                        <!-- Karena file ski.html dihapus, tombol ini diarahkan ke comingsoon sementara -->
-                        <button class="module-btn" onclick="openModul('comingsoon', 'Sejarah Kebudayaan Islam')">Buka Modul &rarr;</button>
-                    </div>
-                </div>
-
-                <!-- 13. Fiqih -->
+                <!-- 12. Fiqih -->
                 <div class="module-card card-navy">
                     <div class="module-header">
                         <div class="module-icon"><i class="fa-solid fa-book-quran"></i></div>
@@ -587,7 +573,14 @@
         // 1. Fungsi Update Angka "Tugas Selesai" di Dashboard
         function updateTugasSelesai() {
             let riwayat = JSON.parse(localStorage.getItem('riwayat_latihan')) || [];
-            document.getElementById('tugas-selesai-count').innerText = riwayat.length + " / 13";
+            
+            // FUNGSI PEMBERSIHAN OTOMATIS: Menghapus "Sejarah Kebudayaan Islam" jika masih nyangkut di memori
+            if(riwayat.includes("Sejarah Kebudayaan Islam")) {
+                 riwayat = riwayat.filter(item => item !== "Sejarah Kebudayaan Islam");
+                 localStorage.setItem('riwayat_latihan', JSON.stringify(riwayat));
+            }
+            
+            document.getElementById('tugas-selesai-count').innerText = riwayat.length + " / 12";
         }
 
         // 2. Fungsi Menampilkan Pop-Up Daftar Riwayat Latihan
